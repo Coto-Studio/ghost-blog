@@ -1,0 +1,35 @@
+---
+- name: "Check for Ghost upgrade: {{ item.dir }}"
+  become: true
+  become_user: "{{ ghost_user }}"
+  command:
+    chdir: "{{ item.dir }}"
+    cmd: ghost check-update
+  register: ghost_update_status
+  changed_when: '"You\u0027re up to date!" not in ghost_update_status.stdout'
+
+- name: "Upgrade Ghost install: {{ item.dir }}"
+  become: true
+  become_user: "{{ ghost_user }}"
+  command:
+    chdir: "{{ item.dir }}"
+    cmd: ghost upgrade
+  when: ghost_update_status.changed
+
+- name: "Check Config File: {{ item.dir }}"
+  when: item.checksum is defined
+  stat:
+    path: "{{ item.dir }}/config.production.json"
+    get_checksum: true
+  register: config_stats
+  failed_when: config_stats.stat.checksum != item.checksum
+
+- name: Make sure dev themes are linked
+  when: item.themes_dev is defined
+  file:
+    path: "{{ item.dir }}/content/themes/{{ theme.name }}"
+    src: "{{ theme.src }}"
+    state: link
+  loop: "{{ item.themes_dev }}"
+  loop_control:
+    loop_var: theme
