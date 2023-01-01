@@ -1,5 +1,5 @@
 ---
 # tasks file for ghost-blog
 - name: Upgrade Ghost Instillations
-  include_tasks: upgrade-ghost.yaml
+  include_tasks: upgrade-ghost.yml
   loop: "{{ ghost_installs }}"
