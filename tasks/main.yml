@@ -3,3 +3,5 @@
 - name: Upgrade Ghost Instillations
   include_tasks: upgrade-ghost.yml
   loop: "{{ ghost_installs }}"
+  loop_control:
+    lable: "{{ item.name | default(item.dir) }}"

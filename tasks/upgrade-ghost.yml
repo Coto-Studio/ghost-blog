@@ -1,5 +1,5 @@
 ---
-- name: "Check for Ghost upgrade: {{ item.dir }}"
+- name: "Check for Ghost upgrade: {{ item.name }}"
   become: true
   become_user: "{{ ghost_user }}"
   command:
@@ -8,7 +8,7 @@
   register: ghost_update_status
   changed_when: '"You\u0027re up to date!" not in ghost_update_status.stdout'
 
-- name: "Upgrade Ghost install: {{ item.dir }}"
+- name: "Upgrade Ghost install: {{ item.name }}"
   become: true
   become_user: "{{ ghost_user }}"
   command:
@@ -16,7 +16,7 @@
     cmd: ghost upgrade
   when: ghost_update_status.changed
 
-- name: "Check Config File: {{ item.dir }}"
+- name: "Check Config File: {{ item.name }}"
   when: item.checksum is defined
   stat:
     path: "{{ item.dir }}/config.production.json"
