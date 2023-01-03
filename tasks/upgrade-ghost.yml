@@ -30,6 +30,7 @@
     path: "{{ item.dir }}/content/themes/{{ theme.name }}"
     src: "{{ theme.src }}"
     state: link
+  ignore_errors: True
   loop: "{{ item.themes_dev }}"
   loop_control:
     loop_var: theme
