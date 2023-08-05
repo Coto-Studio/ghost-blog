@@ -1,5 +1,42 @@
 ---
 - hosts: localhost
-  remote_user: root
+  vars:
+    ghost_user: dewittn
+    ghost_installs:
+      - name: Ghost Test Site
+        dir: ~/Programing/dewittn/Ghost/ghost-test-site2
+        type: local
+        themes_dev:
+          - name: writer
+            src: ~/Programing/dewittn/Ghost/nr-ghost
+          - name: dandelion
+            src: ~/Programing/dewittn/Ghost/dandelion
+      # - name: Ghost Live Site
+      #   dir: /var/www/ghost/live
+      #   url: "https://ghost.org"
+      #   port: 2368
+      #   database:
+      #     client: "mysql2"
+      #     connection:
+      #       host: ""
+      #       user: ""
+      #       password: ""
+      #       database: ""
+      #   storage:
+      #     accessKeyId: ""
+      #     secretAccessKey: ""
+      #     bucket: ""
+      #     endpoint: ""
+      #   mail:
+      #     transport: "SMTP"
+      #     options:
+      #       service: ""
+      #       host: ""
+      #       port: 465
+      #       secure: true
+      #       auth:
+      #         user: ""
+      #         pass: ""
+
   roles:
-    - ghost-blog
+    - ../../
