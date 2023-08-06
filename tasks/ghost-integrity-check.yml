@@ -1,7 +1,7 @@
 ---
 - name: Make sure config file is correct
-  template:
-    src: config.j2
+  copy:
+    content: "{{ lookup('template', 'templates/config.j2') | to_nice_json }}"
     dest: "{{ item['dir'] }}/config.development.json"
 
 - name: Make sure dev themes are linked

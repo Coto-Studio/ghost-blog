@@ -8,6 +8,26 @@
         type: local
         server:
           port: 2368
+        # database:
+        #   client: "mysql2"
+        #   connection:
+        #     host: "192.168.0.1"
+        #     user: "test"
+        #     password: "test123"
+        #     database: "ghost_test"
+        #   pool:
+        #     min: 2
+        #     max: 10
+        # mail:
+        #   transport: "SMTP"
+        #   options:
+        #     service: "mailgun"
+        #     host: "smtp.mailgun.com"
+        #     port: 465
+        #     secure: "true"
+        #     auth:
+        #       user: "admin"
+        #       pass: "123456"
         themes_dev:
           - name: writer
             src: ~/Programing/dewittn/Ghost/nr-ghost
@@ -17,28 +37,11 @@
       #   dir: /var/www/ghost/live
       #   url: "https://ghost.org"
       #   port: 2368
-      #   database:
-      #     client: "mysql2"
-      #     connection:
-      #       host: ""
-      #       user: ""
-      #       password: ""
-      #       database: ""
       #   storage:
       #     accessKeyId: ""
       #     secretAccessKey: ""
       #     bucket: ""
       #     endpoint: ""
-      #   mail:
-      #     transport: "SMTP"
-      #     options:
-      #       service: ""
-      #       host: ""
-      #       port: 465
-      #       secure: true
-      #       auth:
-      #         user: ""
-      #         pass: ""
 
   roles:
     - ../../

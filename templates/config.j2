@@ -1,17 +1,48 @@
+{%- set database = item['database'] -%}
+{%- set server = item['server'] -%}
 {
-  "url": "{{ item['url'] | default('http://localhost:' + item['server']['port'] | string) }}/",
+  "url": "{{ item['url'] | default('http://localhost:' + server['port'] | string) }}",
   "server": {
-    "port": {{ item['server']['port'] | default('2368') }},
-    "host": "{{ item['server']['host'] | default('127.0.0.1') }}"
+    "port": {{ server['port'] | default('2368') }},
+    "host": "{{ server['host'] | default('127.0.0.1') }}"
   },
   "database": {
-    "client": "sqlite3",
+    "client": "{{ database['client'] | default('sqlite3') }}",
     "connection": {
+      {%- if database['connection'] is defined -%}
+      {%- set connection = database['connection'] -%}
+      "host": "{{ connection['host'] | default('127.0.0.1') }}",
+      "port": {{ connection['port'] | default(3306) }},
+      "user": "{{ connection['user'] | default(omit)}}",
+      "password": "{{ connection['password'] | default(omit)}}",
+      "database": "{{ connection['database'] | default(omit)}}",
+      {%- if database['pool'] is defined -%}
+      "pool": {
+        "min": {{ database['pool']['min'] | default(omit) }},
+        "max": {{ database['pool']['max'] | default(omit) }},
+        }
+      {%- endif -%}
+      {%- else -%}
       "filename": "{{ item['dir']}}/content/data/ghost-local.db"
-    }
+      {%- endif -%}
+    },
   },
   "mail": {
-    "transport": "Direct"
+    {% if item['mail']['options'] is defined %}
+    {%- set options = item['mail']['options'] -%}
+    "options": {
+      "service": "{{ options['service'] | default(omit) }}",
+      "host": "{{ options['host'] | default(omit) }}",
+      "port": {{ options['port'] | default(omit) }},
+      "secure": {{ options['secure'] | default(omit) }},
+      "auth": {
+        "user": "{{ options['auth']['user'] | default(omit) }}",
+        "pass": "{{ options['auth']['pass'] | default(omit) }}"
+      }
+    },
+    {%- endif -%}
+    "from": "{{ mail['from'] | default(omit) }}",
+    "transport": "{{ item['mail']['transport'] | default('Direct') }}"
   },
   "logging": {
     "transports": [
