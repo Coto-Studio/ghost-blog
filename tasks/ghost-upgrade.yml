@@ -15,22 +15,3 @@
     chdir: "{{ item.dir }}"
     cmd: ghost upgrade
   when: ghost_update_status.changed
-
-- name: "Check Config File: {{ item.name }}"
-  when: item.checksum is defined
-  stat:
-    path: "{{ item.dir }}/config.production.json"
-    get_checksum: true
-  register: config_stats
-  failed_when: config_stats.stat.checksum != item.checksum
-
-- name: Make sure dev themes are linked
-  when: item.themes_dev is defined
-  file:
-    path: "{{ item.dir }}/content/themes/{{ theme.name }}"
-    src: "{{ theme.src }}"
-    state: link
-  ignore_errors: True
-  loop: "{{ item.themes_dev }}"
-  loop_control:
-    loop_var: theme

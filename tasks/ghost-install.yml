@@ -1,3 +1,17 @@
 ---
 - debug:
     msg: "Installing Ghost..."
+
+- name: Make sure install dir exsists
+  file:
+    path: "{{ item['dir'] }}"
+    state: directory
+
+- name: Create Ghost user
+  user:
+    name: "{{ ghost_user }}"
+
+- name: Install Ghost
+  command:
+    chdir: "{{ item.dir }}"
+    cmd: "ghost install {{ item['type'] | default(omit) }} --no-setup"

@@ -4,8 +4,10 @@
     ghost_user: dewittn
     ghost_installs:
       - name: Ghost Test Site
-        dir: ~/Programing/dewittn/Ghost/ghost-test-site2
+        dir: /Users/dewittn/Programing/dewittn/Ghost/ghost-test-site2
         type: local
+        server:
+          port: 2368
         themes_dev:
           - name: writer
             src: ~/Programing/dewittn/Ghost/nr-ghost

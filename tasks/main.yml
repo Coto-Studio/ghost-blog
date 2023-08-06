@@ -30,3 +30,9 @@
   loop_control:
     label: "{{ item.name | default(item.dir) }}"
   when: ghost_installed['changed'] == false
+
+- name: Integrity Check
+  include_tasks: ghost-integrity-check.yml
+  loop: "{{ ghost_installs }}"
+  loop_control:
+    label: "{{ item.name | default(item.dir) }}"

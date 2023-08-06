@@ -1,0 +1,26 @@
+{
+  "url": "{{ item['url'] | default('http://localhost:' + item['server']['port'] | string) }}/",
+  "server": {
+    "port": {{ item['server']['port'] | default('2368') }},
+    "host": "{{ item['server']['host'] | default('127.0.0.1') }}"
+  },
+  "database": {
+    "client": "sqlite3",
+    "connection": {
+      "filename": "{{ item['dir']}}/content/data/ghost-local.db"
+    }
+  },
+  "mail": {
+    "transport": "Direct"
+  },
+  "logging": {
+    "transports": [
+      "file",
+      "stdout"
+    ]
+  },
+  "process": "local",
+  "paths": {
+    "contentPath": "{{ item['dir']}}/content"
+  }
+}
