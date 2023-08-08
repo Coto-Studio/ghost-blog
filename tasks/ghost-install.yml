@@ -20,6 +20,11 @@
   set_fact:
     storage: "{{ item['storage'] }}"
 
+- name: Create object storage bucket
+  command:
+    cmd: "s3cmd mb s3://{{ storage['bucket'] }}"
+  when: storage is defined
+
 - name: Install npm storage adapter
   npm:
     name: "{{ storage['npm_package'] }}"
@@ -31,9 +36,11 @@
   file:
     path: "{{ item['dir'] }}/content/adapters/storage/"
     state: directory
+  when: storage is defined
 
 - name: Link storage adapter files
   file:
     src: "{{ item['dir'] }}/node_modules/{{ storage['npm_package'] }}"
     dest: "{{ item['dir'] }}/content/adapters/storage/{{ storage['npm_package'] }}"
     state: link
+  when: storage is defined

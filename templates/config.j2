@@ -1,6 +1,7 @@
-{%- set database = item['database'] -%}
+{%- set mail = item['mail'] -%}
 {%- set server = item['server'] -%}
 {%- set storage = item['storage'] -%}
+{%- set database = item['database'] -%}
 {
   "url": "{{ item['url'] | default('http://localhost:' + server['port'] | string) }}",
   "server": {
@@ -29,8 +30,8 @@
     },
   },
   "mail": {
-    {% if item['mail']['options'] is defined %}
-    {%- set options = item['mail']['options'] -%}
+    {% if mail['options'] is defined %}
+    {%- set options = mail['options'] -%}
     "options": {
       "service": "{{ options['service'] | default(omit) }}",
       "host": "{{ options['host'] | default(omit) }}",
@@ -43,14 +44,14 @@
     },
     {%- endif -%}
     "from": "{{ mail['from'] | default(omit) }}",
-    "transport": "{{ item['mail']['transport'] | default('Direct') }}"
+    "transport": "{{ mail['transport'] | default('Direct') }}"
   },
   {%- if storage is defined -%}
   "storage": {
     "active": "{{ storage['npm_package'] }}",
     "{{ storage['npm_package'] }}": {
-      "accessKeyId": "arsaoboent",
-      "secretAccessKey": "arstrseinhieasrt",
+      "accessKeyId": "{{ storage['accessKeyId'] }}",
+      "secretAccessKey": "{{ storage['secretAccessKey'] }}",
       "assetHost": "https://{{ storage['bucket'] }}.{{ storage['endpoint'] }}",
       "bucket": "{{ storage['bucket'] }}",
       "endpoint": "{{ storage['endpoint'] }}"
