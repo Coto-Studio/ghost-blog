@@ -43,7 +43,9 @@
       }
     },
     {%- endif -%}
-    "from": "{{ mail['from'] | default(omit) }}",
+    {%- if mail['from'] is defined -%}
+    "from": "{{ mail['from'] }}",
+    {%- endif -%}
     "transport": "{{ mail['transport'] | default('Direct') }}"
   },
   {%- if storage is defined -%}
