@@ -1,7 +1,4 @@
 ---
-- debug:
-    msg: "Installing Ghost..."
-
 - name: Make sure install dir exsists
   file:
     path: "{{ item['dir'] }}"
@@ -16,9 +13,15 @@
     chdir: "{{ item.dir }}"
     cmd: "ghost install {{ item['type'] | default(omit) }} --no-setup"
 
-- name: Create storage object
+- include_tasks: setup_mysql_database.yml
+  when: "item['database'] is defined and 'mysql' in item['database']['client']"
+  vars:
+    mysql: "{{ item['database']['connection'] }}"
+
+- name: Set storage object variable
   set_fact:
     storage: "{{ item['storage'] }}"
+  when: item['storage'] is defined
 
 - name: Create object storage bucket
   command:

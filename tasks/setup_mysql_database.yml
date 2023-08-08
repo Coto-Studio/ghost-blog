@@ -1,0 +1,13 @@
+---
+- name: Create mysql user
+  mysql_user:
+    name: "{{ mysql['user'] }}"
+    host: "{{ mysql['host'] }}"
+    password: "{{ mysql['password'] }}"
+    priv: "{{ mysql['priv'] | default(omit) }}"
+    state: present
+
+- name: Create database
+  mysql_db:
+    name: "{{ mysql['database'] }}"
+    state: present
