@@ -15,3 +15,25 @@
   command:
     chdir: "{{ item.dir }}"
     cmd: "ghost install {{ item['type'] | default(omit) }} --no-setup"
+
+- name: Create storage object
+  set_fact:
+    storage: "{{ item['storage'] }}"
+
+- name: Install npm storage adapter
+  npm:
+    name: "{{ storage['npm_package'] }}"
+    version: "{{ storage['npm_package_version'] | default('latest') }}"
+    path: "{{ item['dir'] }}"
+  when: storage is defined
+
+- name: Create storage adapters dir
+  file:
+    path: "{{ item['dir'] }}/content/adapters/storage/"
+    state: directory
+
+- name: Link storage adapter files
+  file:
+    src: "{{ item['dir'] }}/node_modules/{{ storage['npm_package'] }}"
+    dest: "{{ item['dir'] }}/content/adapters/storage/{{ storage['npm_package'] }}"
+    state: link

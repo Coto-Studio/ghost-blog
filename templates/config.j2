@@ -1,5 +1,6 @@
 {%- set database = item['database'] -%}
 {%- set server = item['server'] -%}
+{%- set storage = item['storage'] -%}
 {
   "url": "{{ item['url'] | default('http://localhost:' + server['port'] | string) }}",
   "server": {
@@ -44,6 +45,18 @@
     "from": "{{ mail['from'] | default(omit) }}",
     "transport": "{{ item['mail']['transport'] | default('Direct') }}"
   },
+  {%- if storage is defined -%}
+  "storage": {
+    "active": "{{ storage['npm_package'] }}",
+    "{{ storage['npm_package'] }}": {
+      "accessKeyId": "arsaoboent",
+      "secretAccessKey": "arstrseinhieasrt",
+      "assetHost": "https://{{ storage['bucket'] }}.{{ storage['endpoint'] }}",
+      "bucket": "{{ storage['bucket'] }}",
+      "endpoint": "{{ storage['endpoint'] }}"
+    }
+  },
+  {%- endif -%}
   "logging": {
     "transports": [
       "file",
