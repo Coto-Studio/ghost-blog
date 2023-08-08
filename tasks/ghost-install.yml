@@ -14,7 +14,7 @@
     cmd: "ghost install {{ item['type'] | default(omit) }} --no-setup"
 
 - name: Setting Up MySQL Database
-  include_tasks: setup_mysql_database.yml
+  include_tasks: setup-mysql-database.yml
   when: "item['database'] is defined and 'mysql' in item['database']['client']"
   vars:
     mysql: "{{ item['database']['connection'] }}"
