@@ -1,0 +1,21 @@
+---
+- name: Create object storage bucket
+  command:
+    cmd: "s3cmd mb s3://{{ storage['bucket'] }}"
+
+- name: Install npm storage adapter
+  npm:
+    name: "{{ storage['npm_package'] }}"
+    version: "{{ storage['npm_package_version'] | default('latest') }}"
+    path: "{{ item['dir'] }}"
+
+- name: Create storage adapters dir
+  file:
+    path: "{{ item['dir'] }}/content/adapters/storage/"
+    state: directory
+
+- name: Link storage adapter files
+  file:
+    src: "{{ item['dir'] }}/node_modules/{{ storage['npm_package'] }}"
+    dest: "{{ item['dir'] }}/content/adapters/storage/{{ storage['npm_package'] }}"
+    state: link
