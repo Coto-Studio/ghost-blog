@@ -12,15 +12,3 @@
   command:
     chdir: "{{ item.dir }}"
     cmd: "ghost install {{ item['type'] | default(omit) }} --no-setup"
-
-- name: Setting Up MySQL Database
-  include_tasks: setup-mysql-database.yml
-  when: "item['database'] is defined and 'mysql' in item['database']['client']"
-  vars:
-    mysql: "{{ item['database']['connection'] }}"
-
-- name: Setting up s3 Storage Adapter
-  include_tasks: setup-s3-storage.yml
-  when: item['storage'] is defined
-  vars:
-    storage: "{{ item['storage'] }}"

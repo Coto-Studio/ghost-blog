@@ -24,6 +24,24 @@
     label: "{{ item.name | default(item.dir) }}"
   when: ghost_installed['changed'] == true
 
+- name: Set Up MySQL Database
+  include_tasks: setup-mysql-database.yml
+  vars:
+    mysql: "{{ item['database']['connection'] }}"
+  when: "item['database'] is defined and 'mysql' in item['database']['client']"
+  loop: "{{ ghost_installs }}"
+  loop_control:
+    label: "{{ item.name | default(item.dir) }}"
+
+- name: Set up s3 Storage Adapter
+  include_tasks: setup-s3-storage.yml
+  vars:
+    storage: "{{ item['storage'] }}"
+  loop: "{{ ghost_installs }}"
+  loop_control:
+    label: "{{ item.name | default(item.dir) }}"
+  when: item['storage'] is defined
+
 - name: Upgrade Ghost Instillations
   include_tasks: ghost-upgrade.yml
   loop: "{{ ghost_installs }}"
