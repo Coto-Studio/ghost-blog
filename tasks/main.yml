@@ -1,21 +1,8 @@
 ---
 # tasks file for ghost-blog
-- name: Ensure ghost-cli is installed
-  npm:
-    global: true
-    name: "ghost-cli"
-    state: "latest"
+- name: Include System Check Tasks
+  include_tasks: system-check.yml
 
-- name: Check that Ghost is installed
-  file:
-    path: "{{item.dir}}/.ghost-cli"
-    state: "file"
-  loop: "{{ ghost_installs }}"
-  loop_control:
-    label: "{{ item.name | default(item.dir) }}"
-  register: ghost_installed
-  changed_when: ghost_installed.state == "absent"
-  failed_when: false
 
 - name: Install Ghost
   include_tasks: ghost-install.yml
