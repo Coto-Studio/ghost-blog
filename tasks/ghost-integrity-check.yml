@@ -18,3 +18,15 @@
   loop: "{{ item.themes_dev }}"
   loop_control:
     loop_var: theme
+
+- name: Ensure all dircetories have the correct permissions
+  shell:
+    cmd: "find ./ -type d -exec chmod 00775 {} \\;"
+    chdir: "{{ ghost_base_dir }}/{{ item['dir'] }}"
+  when: ansible_user != ghost_user
+
+- name: Ensure all files have the correct permissions
+  shell:
+    cmd: "find ./ ! -path './versions/*' -type f -exec chmod 664 {} \\;"
+    chdir: "{{ ghost_base_dir }}/{{ item['dir'] }}"
+  when: ansible_user != ghost_user
