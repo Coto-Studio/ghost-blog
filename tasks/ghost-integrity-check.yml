@@ -2,6 +2,7 @@
 - name: Set config file name
   set_fact:
     config_env: "{% if item['type'] is defined and item['type'] == 'local' %}development{% else %}prodcution{% endif %}"
+    config_env: "{% if item['type'] is defined and item['type'] %}development{% else %}production{% endif %}"
 
 - name: Make sure config file is correct
   copy:
