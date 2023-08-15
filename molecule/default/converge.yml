@@ -1,0 +1,37 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Update package manager cache
+      become: true
+      package:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Upgrade system packages
+      become: true
+      package:
+        upgrade: true
+        autoremove: true
+        autoclean: true
+        cache_valid_time: 3600
+
+    - name: "Add nodejs apt key"
+      apt_key:
+        url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+        state: present
+
+    - name: "Add nodejs 16.x ppa for apt repo"
+      apt_repository:
+        repo: deb https://deb.nodesource.com/node_16.x bionic main
+        update_cache: yes
+
+    - name: "Install nodejs"
+      apt:
+        update_cache: yes
+        name: nodejs
+        state: present
+
+    - name: "Include role ghost-blog"
+      include_role:
+        name: "ghost_blog"

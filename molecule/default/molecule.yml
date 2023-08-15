@@ -1,0 +1,31 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: parallels
+    memory: 1024
+platforms:
+  - name: instance
+    box: "jharoian3/ubuntu-20.04-arm64"
+    # List of dictionaries mapped to `config.vm.network`
+    interfaces:
+      # `network_name` is the required identifier, all other keys map to
+      # arguments.
+      - auto_config: true
+        network_name: private_network
+        type: dhcp
+      - network_name: private_network
+        ip: 192.168.123.3
+      - network_name: forwarded_port
+        guest: 80
+        host: 8080
+    config_options:
+      ssh.keep_alive: yes
+      ssh.remote_user: "vagrant"
+      synced_folder: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
