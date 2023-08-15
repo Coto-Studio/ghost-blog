@@ -1,18 +1,18 @@
 ---
 - name: Set config file name
   set_fact:
-    config_env: "{% if item['type'] is defined and item['type'] == 'local' %}development{% else %}prodcution{% endif %}"
     config_env: "{% if item['type'] is defined and item['type'] %}development{% else %}production{% endif %}"
 
 - name: Make sure config file is correct
   copy:
-    content: "{{ lookup('template', 'templates/config.j2') | to_nice_json }}"
-    dest: "{{ item['dir'] }}/config.{{ config_env }}.json"
+    content: "{{ lookup('template', 'templates/config.j2') | to_json(indent=2, sort_keys=false) }}"
+    dest: "{{ ghost_base_dir }}/{{ item['dir'] }}/config.{{ config_env }}.json"
+    owner: "{{ ghost_user }}"
 
 - name: Make sure dev themes are linked
   when: item.themes_dev is defined
   file:
-    path: "{{ item.dir }}/content/themes/{{ theme.name }}"
+    path: "{{ ghost_base_dir }}/{{ item['dir'] }}/content/themes/{{ theme.name }}"
     src: "{{ theme.src }}"
     state: link
   ignore_errors: True

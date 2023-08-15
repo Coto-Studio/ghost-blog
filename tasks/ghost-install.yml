@@ -1,11 +1,22 @@
 ---
 - name: Make sure install dir exsists
   file:
-    path: "{{ item['dir'] }}"
+    path: "{{ ghost_base_dir }}/{{ item['dir'] }}"
     state: directory
+    owner: "{{ ghost_user }}"
+    group: "ghost"
+    mode: 00775
 
-
-- name: Install Ghost
+- name: Run 'ghost install'
+  become: true
+  become_user: "{{ ghost_user }}"
   command:
-    chdir: "{{ item.dir }}"
-    cmd: "ghost install {{ item['type'] | default(omit) }} --no-setup"
+    chdir: "{{ ghost_base_dir }}/{{ item['dir'] }}"
+    cmd: "ghost install {%- if item['local'] is defined and item['local'] -%}local{%- endif %} --no-setup"
+
+- name: Run 'ghost setup'
+  become: true
+  become_user: "{{ ghost_user }}"
+  command:
+    chdir: "{{ ghost_base_dir }}/{{ item['dir'] }}"
+    cmd: "ghost setup linux-user systemd --pname {{ item['dir'] }}"

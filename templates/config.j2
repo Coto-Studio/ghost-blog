@@ -68,6 +68,6 @@
   },
   "process": "{{ item['type'] | default('systemd')}}",
   "paths": {
-    "contentPath": "{{ item['dir']}}/content"
+    "contentPath": "{{ ghost_base_dir }}/{{ item['dir']}}/content"
   }
 }

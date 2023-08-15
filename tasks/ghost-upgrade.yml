@@ -3,7 +3,7 @@
   become: true
   become_user: "{{ ghost_user }}"
   command:
-    chdir: "{{ item.dir }}"
+    chdir: "{{ ghost_base_dir }}/{{ item.dir }}"
     cmd: "ghost check-update"
   register: ghost_update_status
   changed_when: '"You\u0027re up to date!" not in ghost_update_status.stdout'
@@ -12,6 +12,6 @@
   become: true
   become_user: "{{ ghost_user }}"
   command:
-    chdir: "{{ item.dir }}"
+    chdir: "{{ ghost_base_dir }}/{{ item.dir }}"
     cmd: ghost upgrade
   when: ghost_update_status.changed

@@ -1,21 +1,30 @@
 ---
-- name: Create object storage bucket
-  command:
-    cmd: "s3cmd mb s3://{{ storage['bucket'] }}"
+- name: Set up object storage bucket
+  amazon.aws.s3_bucket:
+    access_key: "{{ storage['accessKeyId'] }}"
+    secret_key: "{{ storage['secretAccessKey'] }}"
+    name: "{{ storage['bucket'] }}"
+    state: present
+    endpoint_url: "https://{{ storage['endpoint'] }}"
 
 - name: Install npm storage adapter
+  become_user: "{{ ghost_user }}"
   npm:
     name: "{{ storage['npm_package'] }}"
     version: "{{ storage['npm_package_version'] | default('latest') }}"
-    path: "{{ item['dir'] }}"
+    path: "{{ ghost_base_dir }}/{{ item['dir'] }}"
 
-- name: Create storage adapters dir
+- name: Ensure storage adapters dir is present
   file:
-    path: "{{ item['dir'] }}/content/adapters/storage/"
+    path: "{{ ghost_base_dir }}/{{ item['dir'] }}/content/adapters/storage/"
+    owner: guser
+    group: ghost
     state: directory
 
-- name: Link storage adapter files
+- name: Ensure storage adapter files are linked
   file:
-    src: "{{ item['dir'] }}/node_modules/{{ storage['npm_package'] }}"
-    dest: "{{ item['dir'] }}/content/adapters/storage/{{ storage['npm_package'] }}"
+    src: "{{ ghost_base_dir }}/{{ item['dir'] }}/node_modules/{{ storage['npm_package'] }}"
+    dest: "{{ ghost_base_dir }}/{{ item['dir'] }}/content/adapters/storage/{{ storage['npm_package'] }}"
+    owner: guser
+    group: ghost
     state: link
