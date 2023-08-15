@@ -1,2 +1,2 @@
 *.json
-ghost-test-site2-vars.yml
+*-vars.yml
