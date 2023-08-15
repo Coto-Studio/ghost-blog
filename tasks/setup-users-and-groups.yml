@@ -1,0 +1,33 @@
+---
+- name: Ensure 'Ghost' system group is present
+  group:
+    name: ghost
+    state: present
+    system: true
+
+- name: Ensure 'Ghost' system user is present
+  user:
+    name: ghost
+    group: ghost
+    state: present
+    create_home: false
+    system: true
+  register: ghost_system_user
+
+- name: "Ensure user {{ ghost_user }} is present"
+  user:
+    name: "{{ ghost_user }}"
+    groups: "{{ ghost_user_groups }}"
+
+- name: "Ensure {{ ghost_user }} is in sudoers"
+  community.general.sudoers:
+    name: "ghost-user"
+    user: "{{ ghost_user }}"
+    state: present
+    commands:
+      - /usr/bin/systemctl
+      - /usr/sbin/useradd
+      - /usr/bin/chown
+      - /usr/bin/mv
+      - /usr/bin/node
+      - /usr/bin/ghost

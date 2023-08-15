@@ -3,6 +3,9 @@
 - name: Include System Check Tasks
   include_tasks: system-check.yml
 
+- name: Include User & Group setup Tasks
+  include_tasks: setup-users-and-groups.yml
+  when: ansible_user != ghost_user
 
 - name: Install Ghost
   include_tasks: ghost-install.yml

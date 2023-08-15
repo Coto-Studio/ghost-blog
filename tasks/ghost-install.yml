@@ -4,9 +4,6 @@
     path: "{{ item['dir'] }}"
     state: directory
 
-- name: Create Ghost user
-  user:
-    name: "{{ ghost_user }}"
 
 - name: Install Ghost
   command:
