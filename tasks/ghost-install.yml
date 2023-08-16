@@ -13,10 +13,3 @@
   command:
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
     cmd: "ghost install {%- if item['local'] is defined and item['local'] -%}local{%- endif %} --no-setup"
-
-- name: Run 'ghost setup'
-  become: true
-  become_user: "{{ ghost_user }}"
-  command:
-    chdir: "{{ ghost_base_dir }}/{{ item['dir'] }}"
-    cmd: "ghost setup linux-user systemd --pname {{ item['dir'] }}"
