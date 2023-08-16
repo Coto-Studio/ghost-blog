@@ -1,0 +1,14 @@
+[Unit]
+Description=Ghost systemd service for blog: ghost-test-site2
+Documentation=https://ghost.org/docs/
+
+[Service]
+Type=simple
+WorkingDirectory={{ ghost_base_dir }}/{{ item['dir']}}
+User={{ ghost_system_user['uid'] }}
+Environment="NODE_ENV=production"
+ExecStart=/usr/bin/node /usr/bin/ghost run
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

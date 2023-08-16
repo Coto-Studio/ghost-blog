@@ -7,40 +7,8 @@
   include_tasks: setup-users-and-groups.yml
   when: ansible_user != ghost_user
 
-- name: Include Install Ghost Blog Tasks
-  include_tasks: ghost-install.yml
-  loop: "{{ ghost_installs }}"
-  loop_control:
-    label: "{{ item.name | default(item['dir']) }}"
-  when: ghost_installed['changed'] == true
-
-- name: Include MySQL Database Tasks
-  include_tasks: setup-mysql-database.yml
-  vars:
-    mysql: "{{ item['database']['connection'] }}"
-  when: "item['database'] is defined and 'mysql' in item['database']['client']"
-  loop: "{{ ghost_installs }}"
-  loop_control:
-    label: "{{ item.name | default(item['dir']) }}"
-
-- name: Include s3 Storage Adapter Tasks
-  include_tasks: setup-s3-storage.yml
-  vars:
-    storage: "{{ item['storage'] }}"
-  loop: "{{ ghost_installs }}"
-  loop_control:
-    label: "{{ item.name | default(item['dir']) }}"
-  when: item['storage'] is defined
-
-- name: Upgrade Ghost Instillations
-  include_tasks: ghost-upgrade.yml
-  loop: "{{ ghost_installs }}"
-  loop_control:
-    label: "{{ item.name | default(item['dir']) }}"
-  when: ghost_installed['changed'] == false
-
-- name: Integrity Check
-  include_tasks: ghost-integrity-check.yml
+- name: "Configure Instalation(s)"
+  include_tasks: configure-ghost.yml
   loop: "{{ ghost_installs }}"
   loop_control:
     label: "{{ item.name | default(item['dir']) }}"
