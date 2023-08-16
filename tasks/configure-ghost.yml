@@ -40,3 +40,23 @@
 - name: Include Integrity Check Tasks
   include_tasks: ghost-integrity-check.yml
 
+- name: Include Service Tasks
+  include_tasks: ghost-service.yml
+
+- name: Run ghost start command
+  become: true
+  become_user: "{{ ghost_user }}"
+  command:
+    cmd: ghost start
+    chdir: "{{ ghost_base_dir }}/{{ item['dir'] }}"
+  register: ghost_started
+  changed_when: "'Ghost is already running!' not in ghost_started['stdout']"
+  when: item['state'] == "started"
+
+- name: Run ghost stop command
+  become: true
+  become_user: "{{ ghost_user }}"
+  command:
+    cmd: ghost stop
+    chdir: "{{ ghost_base_dir }}/{{ item['dir'] }}"
+  when: item['state'] == "stopped"
