@@ -6,11 +6,18 @@
     owner: guser
     group: ghost
     mode: 0644
+  register: service_updated
+
+- name: "Reload service for {{ item['name'] }}"
+  ansible.builtin.systemd:
+    name: "ghost_{{ item['id'] }}"
+    state: reloaded
+  when: service_updated is changed
 
 - name: Ensure service is persent in ghost-cli config
   set_fact:
     ghost_cli: "{{ ghost_cli | combine({ 'name': item['id'] }) }}"
-  when: ghost_cli['name'] is not defined and ghost_cli['name'] != item['id']
+  when: ghost_cli['name'] is not defined or ghost_cli['name'] != item['id']
 
 - name: Ensure ghost-cli config is up to date
   copy:

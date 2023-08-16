@@ -1,8 +1,13 @@
 ---
-- name: Ensure install install type is set
+- name: Set install type to 'production'
   set_fact:
-    item: "{{ item | combine({ 'type': 'production' }) }}"
-  when: item['type'] is not defined
+    install_type: "production"
+  when: item['local'] is undefined
+
+- name: Set install type to 'development'
+  set_fact:
+    install_type: "development"
+  when: item['local'] is defined
 
 - name: Check if Ghost is installed
   ansible.builtin.file:
@@ -45,7 +50,17 @@
 
 - name: Include Service Tasks
   include_tasks: ghost-service.yml
-  when: item['type'] == "production"
+  when: install_type == "production"
+
+- name: Run ghost stop command
+  become: true
+  become_user: "{{ ghost_user }}"
+  command:
+    cmd: ghost stop
+    chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
+  when:
+    - ghost_installed is succeeded
+    - item['state'] == "stopped" or config_updated is changed
 
 - name: Run ghost start command
   become: true
@@ -56,11 +71,3 @@
   register: ghost_started
   changed_when: "'Ghost is already running!' not in ghost_started['stdout']"
   when: item['state'] == "started"
-
-- name: Run ghost stop command
-  become: true
-  become_user: "{{ ghost_user }}"
-  command:
-    cmd: ghost stop
-    chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
-  when: item['state'] == "stopped"

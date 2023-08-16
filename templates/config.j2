@@ -66,7 +66,7 @@
       "stdout"
     ]
   },
-  "process": "{{ item['type'] | default('systemd')}}",
+  "process": "{%- if install_type == "development" -%}local{%- else -%}systemd{%- endif -%}",
   "paths": {
     "contentPath": "{{ ghost_base_dir }}/{{ item['id']}}/content"
   }

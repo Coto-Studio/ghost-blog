@@ -1,33 +1,36 @@
 ---
-- name: Set config file name
-  set_fact:
-    config_env: "{% if item['type'] is defined and item['type'] %}development{% else %}production{% endif %}"
-
 - name: Make sure config file is correct
   copy:
     content: "{{ lookup('template', 'templates/config.j2') | to_json(indent=2, sort_keys=false) }}"
-    dest: "{{ ghost_base_dir }}/{{ item['id'] }}/config.{{ config_env }}.json"
+    dest: "{{ ghost_base_dir }}/{{ item['id'] }}/config.{{ install_type }}.json"
     owner: "{{ ghost_user }}"
+  register: config_updated
 
 - name: Make sure dev themes are linked
   when: item.themes_dev is defined
   file:
-    path: "{{ ghost_base_dir }}/{{ item['id'] }}/content/themes/{{ theme.name }}"
-    src: "{{ theme.src }}"
+    path: "{{ ghost_base_dir }}/{{ item['id'] }}/content/themes/{{ theme['name'] }}"
+    src: "{{ theme['src'] }}"
     state: link
   ignore_errors: True
-  loop: "{{ item.themes_dev }}"
+  loop: "{{ item['themes_dev'] }}"
   loop_control:
     loop_var: theme
+
+- name: Ensure content dircetory has the correct permissions
+  shell:
+    cmd: "chown -R {{ ghost_user }}:ghost ./content"
+    chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
+  when: install_type == "production"
 
 - name: Ensure all dircetories have the correct permissions
   shell:
     cmd: "find ./ -type d -exec chmod 00775 {} \\;"
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
-  when: ansible_user != ghost_user
+  when: install_type == "production"
 
 - name: Ensure all files have the correct permissions
   shell:
     cmd: "find ./ ! -path './versions/*' -type f -exec chmod 664 {} \\;"
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
-  when: ansible_user != ghost_user
+  when: install_type == "production"

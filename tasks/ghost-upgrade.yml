@@ -1,17 +1,17 @@
 ---
-- name: "Check for Ghost upgrade: {{ item.dir }}"
+- name: "Check for Ghost upgrade: {{ item['id'] }}"
   become: true
   become_user: "{{ ghost_user }}"
   command:
-    chdir: "{{ ghost_base_dir }}/{{ item.dir }}"
+    chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
     cmd: "ghost check-update"
   register: ghost_update_status
   changed_when: '"You\u0027re up to date!" not in ghost_update_status.stdout'
 
-- name: "Upgrade Ghost install: {{ item.name }}"
+- name: "Upgrade Ghost install: {{ item['name'] }}"
   become: true
   become_user: "{{ ghost_user }}"
   command:
-    chdir: "{{ ghost_base_dir }}/{{ item.dir }}"
+    chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
     cmd: ghost upgrade
   when: ghost_update_status.changed

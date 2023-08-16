@@ -1,5 +1,5 @@
 ---
-- name: Set up object storage bucket
+- name: Ensue object storage bucket is present
   amazon.aws.s3_bucket:
     access_key: "{{ storage['accessKeyId'] }}"
     secret_key: "{{ storage['secretAccessKey'] }}"
@@ -7,7 +7,7 @@
     state: present
     endpoint_url: "https://{{ storage['endpoint'] }}"
 
-- name: Install npm storage adapter
+- name: Ensure npm storage adapter is installed
   become_user: "{{ ghost_user }}"
   npm:
     name: "{{ storage['npm_package'] }}"
