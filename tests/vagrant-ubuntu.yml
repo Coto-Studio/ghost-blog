@@ -30,7 +30,7 @@
         autoremove: true
         autoclean: true
         cache_valid_time: 3600
-      when: updaded_packages.changed
+      when: updaded_packages is changed
 
     - name: Install required packages
       become: true
