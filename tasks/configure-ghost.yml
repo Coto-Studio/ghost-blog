@@ -8,7 +8,7 @@
 
 - name: Include Ghost Install Tasks
   include_tasks: ghost-install.yml
-  when: ghost_installed['failed']
+  when: ghost_installed is failed
 
 - name: Load ghost-cli config
   ansible.builtin.slurp:
@@ -33,7 +33,7 @@
 
 - name: Include Upgrade Ghost Tasks
   include_tasks: ghost-upgrade.yml
-  when: not ghost_installed['failed']
+  when: ghost_installed is succeeded
 
 - name: Include Integrity Check Tasks
   include_tasks: ghost-integrity-check.yml
