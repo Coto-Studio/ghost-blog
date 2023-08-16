@@ -1,7 +1,12 @@
 ---
+- name: Ensure install install type is set
+  set_fact:
+    item: "{{ item | combine({ 'type': 'production' }) }}"
+  when: item['type'] is not defined
+
 - name: Check if Ghost is installed
   ansible.builtin.file:
-    path: "{{ ghost_base_dir }}/{{ item['dir'] }}/.ghost-cli"
+    path: "{{ ghost_base_dir }}/{{ item['id'] }}/.ghost-cli"
     state: "file"
   register: ghost_installed
   ignore_errors: true
@@ -12,7 +17,7 @@
 
 - name: Load ghost-cli config
   ansible.builtin.slurp:
-    src: "{{ ghost_base_dir }}/{{ item['dir'] }}/.ghost-cli"
+    src: "{{ ghost_base_dir }}/{{ item['id'] }}/.ghost-cli"
   register: cli_file
 
 - name: Pasre config json
@@ -47,7 +52,7 @@
   become_user: "{{ ghost_user }}"
   command:
     cmd: ghost start
-    chdir: "{{ ghost_base_dir }}/{{ item['dir'] }}"
+    chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
   register: ghost_started
   changed_when: "'Ghost is already running!' not in ghost_started['stdout']"
   when: item['state'] == "started"
@@ -57,5 +62,5 @@
   become_user: "{{ ghost_user }}"
   command:
     cmd: ghost stop
-    chdir: "{{ ghost_base_dir }}/{{ item['dir'] }}"
+    chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
   when: item['state'] == "stopped"

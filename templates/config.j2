@@ -25,7 +25,7 @@
         }
       {%- endif -%}
       {%- else -%}
-      "filename": "{{ item['dir']}}/content/data/ghost-local.db"
+      "filename": "{{ item['id']}}/content/data/ghost-local.db"
       {%- endif -%}
     },
   },
@@ -68,6 +68,6 @@
   },
   "process": "{{ item['type'] | default('systemd')}}",
   "paths": {
-    "contentPath": "{{ ghost_base_dir }}/{{ item['dir']}}/content"
+    "contentPath": "{{ ghost_base_dir }}/{{ item['id']}}/content"
   }
 }

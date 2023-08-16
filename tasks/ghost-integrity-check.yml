@@ -6,13 +6,13 @@
 - name: Make sure config file is correct
   copy:
     content: "{{ lookup('template', 'templates/config.j2') | to_json(indent=2, sort_keys=false) }}"
-    dest: "{{ ghost_base_dir }}/{{ item['dir'] }}/config.{{ config_env }}.json"
+    dest: "{{ ghost_base_dir }}/{{ item['id'] }}/config.{{ config_env }}.json"
     owner: "{{ ghost_user }}"
 
 - name: Make sure dev themes are linked
   when: item.themes_dev is defined
   file:
-    path: "{{ ghost_base_dir }}/{{ item['dir'] }}/content/themes/{{ theme.name }}"
+    path: "{{ ghost_base_dir }}/{{ item['id'] }}/content/themes/{{ theme.name }}"
     src: "{{ theme.src }}"
     state: link
   ignore_errors: True
@@ -23,11 +23,11 @@
 - name: Ensure all dircetories have the correct permissions
   shell:
     cmd: "find ./ -type d -exec chmod 00775 {} \\;"
-    chdir: "{{ ghost_base_dir }}/{{ item['dir'] }}"
+    chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
   when: ansible_user != ghost_user
 
 - name: Ensure all files have the correct permissions
   shell:
     cmd: "find ./ ! -path './versions/*' -type f -exec chmod 664 {} \\;"
-    chdir: "{{ ghost_base_dir }}/{{ item['dir'] }}"
+    chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
   when: ansible_user != ghost_user

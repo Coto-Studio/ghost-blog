@@ -4,7 +4,7 @@ Documentation=https://ghost.org/docs/
 
 [Service]
 Type=simple
-WorkingDirectory={{ ghost_base_dir }}/{{ item['dir']}}
+WorkingDirectory={{ ghost_base_dir }}/{{ item['id']}}
 User={{ ghost_system_user['uid'] }}
 Environment="NODE_ENV=production"
 ExecStart=/usr/bin/node /usr/bin/ghost run

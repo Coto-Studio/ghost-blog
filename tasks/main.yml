@@ -11,4 +11,4 @@
   include_tasks: configure-ghost.yml
   loop: "{{ ghost_installs }}"
   loop_control:
-    label: "{{ item.name | default(item['dir']) }}"
+    label: "{{ item.name | default(item['id']) }}"

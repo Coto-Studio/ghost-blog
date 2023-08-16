@@ -1,7 +1,7 @@
 ---
 - name: Make sure install dir exsists
   file:
-    path: "{{ ghost_base_dir }}/{{ item['dir'] }}"
+    path: "{{ ghost_base_dir }}/{{ item['id'] }}"
     state: directory
     owner: "{{ ghost_user }}"
     group: "ghost"
@@ -11,7 +11,7 @@
   become: true
   become_user: "{{ ghost_user }}"
   command:
-    chdir: "{{ ghost_base_dir }}/{{ item['dir'] }}"
+    chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
     cmd: "ghost install {%- if item['local'] is defined and item['local'] -%}local{%- endif %} --no-setup"
 
 - name: Run 'ghost setup'
