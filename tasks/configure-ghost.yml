@@ -4,22 +4,20 @@
     path: "{{ ghost_base_dir }}/{{ item['dir'] }}/.ghost-cli"
     state: "file"
   register: ghost_installed
-  changed_when: ghost_installed.state == "absent"
-  failed_when: false
+  ignore_errors: true
+
+- name: Include Ghost Install Tasks
+  include_tasks: ghost-install.yml
+  when: ghost_installed['failed']
 
 - name: Load ghost-cli config
   ansible.builtin.slurp:
     src: "{{ ghost_base_dir }}/{{ item['dir'] }}/.ghost-cli"
   register: cli_file
-  when: not ghost_installed['changed']
 
 - name: Pasre config json
   ansible.builtin.set_fact:
     ghost_cli: "{{ cli_file['content'] | b64decode | from_json }}"
-
-- name: Include Ghost Install Tasks
-  include_tasks: ghost-install.yml
-  when: ghost_installed['changed'] == true
 
 - name: Include MySQL Database Tasks
   include_tasks: setup-mysql-database.yml
@@ -35,7 +33,7 @@
 
 - name: Include Upgrade Ghost Tasks
   include_tasks: ghost-upgrade.yml
-  when: ghost_installed['changed'] == false
+  when: not ghost_installed['failed']
 
 - name: Include Integrity Check Tasks
   include_tasks: ghost-integrity-check.yml
