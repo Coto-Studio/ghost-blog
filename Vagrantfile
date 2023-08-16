@@ -16,6 +16,13 @@ boxes = [
     :cpu => "50",
     :ram => "1024"
   },
+  {
+    :name => "ubuntu-2204",
+    :box => "jharoian3/ubuntu-22.04-arm64",
+    :ip => '10.0.0.15',
+    :cpu => "50",
+    :ram => "1024"
+  },
 ]
 
 Vagrant.configure("2") do |config|
