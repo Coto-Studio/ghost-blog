@@ -3,7 +3,7 @@
   amazon.aws.s3_bucket:
     access_key: "{{ storage['accessKeyId'] }}"
     secret_key: "{{ storage['secretAccessKey'] }}"
-    name: "{{ storage['bucket'] }}"
+    name: "{{ storage['bucket'] | default(item['id']) }}"
     state: present
     endpoint_url: "https://{{ storage['endpoint'] }}"
 

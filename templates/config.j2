@@ -3,7 +3,7 @@
 {%- set storage = item['storage'] -%}
 {%- set database = item['database'] -%}
 {
-  "url": "{{ item['url'] | default('http://localhost:' + server['port'] | string) }}",
+  "url": "{{ item['url'] | default('http://localhost:' + (server['port'] | default('2368')) | string) }}",
   "server": {
     "port": {{ server['port'] | default('2368') }},
     "host": "{{ server['host'] | default('127.0.0.1') }}"
@@ -17,7 +17,7 @@
       "port": {{ connection['port'] | default(3306) }},
       "user": "{{ connection['user'] | default(omit)}}",
       "password": "{{ connection['password'] | default(omit)}}",
-      "database": "{{ connection['database'] | default(omit)}}",
+      "database": "{{ connection['database'] | default(item['id'] | regex_replace('-|\.','_')) }}",
       {%- if database['pool'] is defined -%}
       "pool": {
         "min": {{ database['pool']['min'] | default(omit) }},
@@ -54,8 +54,8 @@
     "{{ storage['npm_package'] }}": {
       "accessKeyId": "{{ storage['accessKeyId'] }}",
       "secretAccessKey": "{{ storage['secretAccessKey'] }}",
-      "assetHost": "https://{{ storage['bucket'] }}.{{ storage['endpoint'] }}",
-      "bucket": "{{ storage['bucket'] }}",
+      "assetHost": "https://{{ storage['bucket'] | default(item['id']) }}.{{ storage['endpoint'] }}",
+      "bucket": "{{ storage['bucket'] | default(item['id']) }}",
       "endpoint": "{{ storage['endpoint'] }}"
     }
   },
