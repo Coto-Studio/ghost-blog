@@ -17,7 +17,7 @@
       "port": {{ connection['port'] | default(3306) }},
       "user": "{{ connection['user'] | default(omit)}}",
       "password": "{{ connection['password'] | default(omit)}}",
-      "database": "{{ connection['database'] | default(item['id'] | regex_replace('-|\.','_')) }}",
+      "database": "{{ connection['database'] | default(item['id'] | regex_replace('-|\.','_')) }}_{%- if install_type == "development" -%}dev{%- else -%}prod{%- endif -%}",
       {%- if database['pool'] is defined -%}
       "pool": {
         "min": {{ database['pool']['min'] | default(omit) }},
