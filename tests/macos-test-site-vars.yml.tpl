@@ -1,16 +1,12 @@
 ---
-ghost_user: dewittn
+ghost_user: "" 
+
+ghost_base_dir: ""
 ghost_installs:
   - name: Ghost Test Site2
-    dir: /Users/dewittn/Programing/dewittn/Ghost/ghost-test-site2
-    type: local
-    server:
-      port: 2368
-    themes_dev:
-      - name: writer
-        src: ~/Programing/dewittn/Ghost/nr-ghost
-      - name: dandelion
-        src: ~/Programing/dewittn/Ghost/dandelion
+    id: ghost-test-site2
+    local: true
+    themes_dev: []
     database:
       client: "mysql2"
       connection:
