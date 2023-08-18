@@ -1,7 +1,7 @@
 ---
 - hosts: localhost
   vars_files:
-    - ./ghost-test-site2-vars.yml
+    - ./macos-test-site-vars.yml
 
   roles:
     - ../../
