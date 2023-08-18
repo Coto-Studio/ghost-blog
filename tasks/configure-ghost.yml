@@ -1,12 +1,14 @@
 ---
-- name: Set install type to 'production'
+- name: Set facts for 'production'
   set_fact:
     install_type: "production"
+    ghost_group: "ghost"
   when: item['local'] is undefined
 
-- name: Set install type to 'development'
+- name: Set facts for 'development'
   set_fact:
     install_type: "development"
+    ghost_group: "staff"
   when: item['local'] is defined
 
 - name: Check if Ghost is installed
