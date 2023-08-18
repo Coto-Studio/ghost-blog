@@ -13,17 +13,21 @@
   loop_control:
     label: "{{ item['name'] | default(item['id']) }}"
 
-- name: Ensure Global Ghost directory exsists
+- name: Get ghost_user home dircetory
+  become: true
   become_user: "{{ ghost_user }}"
+  command: "echo $HOME"
+  register: home_dir
+
+- name: Ensure Global Ghost directory exsists
   file:
-    path: "{{ lookup('env','HOME') }}/.ghost"
+    path: "{{ home_dir['stdout'] }}/.ghost"
     owner: "{{ ghost_user }}"
     state: directory
 
 - name: Ensure Global config is correct
-  become_user: "{{ ghost_user }}"
   copy:
     content: "{{ lookup('template', 'templates/global-config.j2') | to_json(indent=2, sort_keys=false) }}"
-    dest: "{{ lookup('env','HOME') }}/.ghost/config"
+    dest: "{{ home_dir['stdout'] }}/.ghost/config"
     owner: "{{ ghost_user }}"
     mode: 0664
