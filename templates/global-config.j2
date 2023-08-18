@@ -1,0 +1,9 @@
+{
+  "instances": {
+    {%- for install in ghost_installs -%}
+    "{{ install['id'] }}": {
+      "cwd": "{{ ghost_base_dir }}/{{ install['id']}}"
+    }{%- if not loop.last -%},{%- endif -%}
+    {% endfor %}
+  }
+}

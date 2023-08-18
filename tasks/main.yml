@@ -12,3 +12,10 @@
   loop: "{{ ghost_installs }}"
   loop_control:
     label: "{{ item['name'] | default(item['id']) }}"
+
+- name: Ensure Global config is correct
+  copy:
+    content: "{{ lookup('template', 'templates/global-config.j2') | to_json(indent=2, sort_keys=false) }}"
+    dest: "/home/{{ ghost_user}}/.ghost/config"
+    owner: "{{ ghost_user }}"
+    mode: 0664
