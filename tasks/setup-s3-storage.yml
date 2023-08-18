@@ -17,14 +17,14 @@
 - name: Ensure storage adapters dir is present
   file:
     path: "{{ ghost_base_dir }}/{{ item['id'] }}/content/adapters/storage/"
-    owner: guser
-    group: ghost
+    owner: "{{ ghost_user }}"
+    group: "{{ ghost_group }}"
     state: directory
 
 - name: Ensure storage adapter files are linked
   file:
     src: "{{ ghost_base_dir }}/{{ item['id'] }}/node_modules/{{ storage['npm_package'] }}"
     dest: "{{ ghost_base_dir }}/{{ item['id'] }}/content/adapters/storage/{{ storage['npm_package'] }}"
-    owner: guser
-    group: ghost
+    owner: "{{ ghost_user }}"
+    group: "{{ ghost_group }}"
     state: link

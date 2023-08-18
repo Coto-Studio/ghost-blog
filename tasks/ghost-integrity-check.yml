@@ -4,7 +4,7 @@
     content: "{{ lookup('template', 'templates/config.j2') | to_json(indent=2, sort_keys=false) }}"
     dest: "{{ ghost_base_dir }}/{{ item['id'] }}/config.{{ install_type }}.json"
     owner: "{{ ghost_user }}"
-    group: ghost
+    group: "{{ ghost_group }}"
     mode: 0664
   register: config_updated
 

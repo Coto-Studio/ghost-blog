@@ -20,6 +20,6 @@
   copy:
     content: "{{ ghost_cli | to_json(indent=2, sort_keys=false) }}"
     dest: "{{ ghost_base_dir }}/{{ item['id'] }}/.ghost-cli"
-    owner: guser
-    group: ghost
+    owner: "{{ ghost_user }}"
+    group: "{{ ghost_group }}"
     mode: 0664

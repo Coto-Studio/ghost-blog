@@ -5,7 +5,7 @@
 
 - name: Include User & Group setup Tasks
   include_tasks: setup-users-and-groups.yml
-  when: ansible_user != ghost_user
+  when: ansible_user_id != ghost_user
 
 - name: "Configure Instalation(s)"
   include_tasks: configure-ghost.yml
@@ -13,9 +13,17 @@
   loop_control:
     label: "{{ item['name'] | default(item['id']) }}"
 
+- name: Ensure Global Ghost directory exsists
+  become_user: "{{ ghost_user }}"
+  file:
+    path: "{{ lookup('env','HOME') }}/.ghost"
+    owner: "{{ ghost_user }}"
+    state: directory
+
 - name: Ensure Global config is correct
+  become_user: "{{ ghost_user }}"
   copy:
     content: "{{ lookup('template', 'templates/global-config.j2') | to_json(indent=2, sort_keys=false) }}"
-    dest: "/home/{{ ghost_user}}/.ghost/config"
+    dest: "{{ lookup('env','HOME') }}/.ghost/config"
     owner: "{{ ghost_user }}"
     mode: 0664
