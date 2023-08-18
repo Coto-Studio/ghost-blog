@@ -56,8 +56,8 @@
   become: true
   become_user: "{{ ghost_user }}"
   command:
-    cmd: ghost stop
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
+    cmd: ghost stop
   when:
     - ghost_installed is succeeded
     - item['state'] == "stopped" or config_updated is changed
@@ -66,8 +66,8 @@
   become: true
   become_user: "{{ ghost_user }}"
   command:
-    cmd: ghost start
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
+    cmd: ghost start
   register: ghost_started
   changed_when: "'Ghost is already running!' not in ghost_started['stdout']"
   when: item['state'] == "started"
