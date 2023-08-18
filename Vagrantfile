@@ -9,20 +9,20 @@
 role = File.basename(File.expand_path(File.dirname(__FILE__)))
 
 boxes = [
-  {
-    :name => "ubuntu-2004",
-    :box => "jharoian3/ubuntu-20.04-arm64",
-    :ip => '10.0.0.14',
-    :cpu => "50",
-    :ram => "1024"
-  },
   # {
-  #   :name => "ubuntu-2204",
-  #   :box => "jharoian3/ubuntu-22.04-arm64",
-  #   :ip => '10.0.0.15',
+  #   :name => "ubuntu-2004",
+  #   :box => "jharoian3/ubuntu-20.04-arm64",
+  #   :ip => '10.0.0.14',
   #   :cpu => "50",
   #   :ram => "1024"
   # },
+  {
+    :name => "ubuntu-2204",
+    :box => "bento/ubuntu-22.04-arm64",
+    :ip => '10.0.0.15',
+    :cpu => "50",
+    :ram => "1024"
+  },
 ]
 
 Vagrant.configure("2") do |config|
