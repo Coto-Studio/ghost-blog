@@ -43,12 +43,12 @@
     storage: "{{ item['storage'] }}"
   when: item['storage'] is defined
 
+- name: Include Integrity Check Tasks
+  include_tasks: ghost-integrity-check.yml
+
 - name: Include Upgrade Ghost Tasks
   include_tasks: ghost-upgrade.yml
   when: ghost_installed is succeeded
-
-- name: Include Integrity Check Tasks
-  include_tasks: ghost-integrity-check.yml
 
 - name: Include Service Tasks
   include_tasks: ghost-service.yml
