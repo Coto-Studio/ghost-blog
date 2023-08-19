@@ -13,11 +13,16 @@
     "connection": {
       {%- if database['connection'] is defined -%}
       {%- set connection = database['connection'] -%}
+      {%- if install_type == "development" -%}
+      {%- set db_default_name = (item['id'] | regex_replace('-|\.','_')) + '_dev' -%}
+      {%- else -%}
+      {%- set db_default_name = (item['id'] | regex_replace('-|\.','_')) + '_prod' -%}
+      {%- endif -%}
       "host": "{{ connection['host'] | default('127.0.0.1') }}",
       "port": {{ connection['port'] | default(3306) }},
       "user": "{{ connection['user'] | default(omit)}}",
-      "password": "{{ connection['password'] | default(omit)}}",
-      "database": "{{ connection['database'] | default(item['id'] | regex_replace('-|\.','_')) }}_{%- if install_type == "development" -%}dev{%- else -%}prod{%- endif -%}",
+      "password": "{{ connection['password'] | default(omit) }}",
+      "database": "{{ connection['database'] | default(db_default_name) }}",
       {%- if database['pool'] is defined -%}
       "pool": {
         "min": {{ database['pool']['min'] | default(omit) }},
