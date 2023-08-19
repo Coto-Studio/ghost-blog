@@ -8,6 +8,12 @@
     mode: 0664
   register: config_updated
 
+- name: Make sure Casper theme is linked
+  file:
+    path: "{{ ghost_base_dir }}/{{ item['id'] }}/content/themes/casper"
+    src: "{{ ghost_base_dir }}/{{ item['id'] }}/current/content/themes/casper"
+    state: link
+
 - name: Make sure dev themes are linked
   when: item.themes_dev is defined
   file:
