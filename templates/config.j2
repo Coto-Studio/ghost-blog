@@ -13,12 +13,6 @@
     "connection": {
       {%- if database['connection'] is defined -%}
       {%- set connection = database['connection'] -%}
-      {%- set sanatized_id = (item['id'] | regex_replace('-|\.','_')) -%}
-      {%- if install_type == "development" -%}
-      {%- set db_default_name = sanatized_id + '_dev' -%}
-      {%- else -%}
-      {%- set db_default_name = sanatized_id + '_prod' -%}
-      {%- endif -%}
       "host": "{{ connection['host'] | default('127.0.0.1') }}",
       "port": {{ connection['port'] | default(3306) }},
       "user": "{{ connection['user'] | default(omit)}}",
