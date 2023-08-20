@@ -49,12 +49,16 @@
 
 - name: Ensure all dircetories have the correct permissions
   shell:
-    cmd: "find ./ -type d ! -perm 00775 -exec chmod 00775 {} \\;"
+    cmd: "find ./ -type d ! -perm 00775 -print -exec chmod 00775 {} \\;"
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
   when: install_type == "production"
+  register: directory_permissions
+  changed_when: directory_permissions['stdout'] != ''
 
 - name: Ensure all files have the correct permissions
   shell:
-    cmd: "find ./ ! -path './versions/*' -type f ! -perm 664 -exec chmod 664 {} \\;"
+    cmd: "find ./ ! -path './versions/*' -type f ! -perm 664 -print -exec chmod 664 {} \\;"
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
   when: install_type == "production"
+  register: file_permissions
+  changed_when: file_permissions['stdout'] != ''
