@@ -8,13 +8,29 @@
     mode: 0664
   register: config_updated
 
-- name: Make sure Casper theme is linked
+- name: Find all installed versions of Ghost
+  find:
+    path: "{{ ghost_base_dir }}/{{ item['id'] }}/versions/"
+    file_type: directory
+  register: ghost_versions
+
+- name: Identify the most current version of Ghost
+  set_fact:
+    current_version: "{{ ghost_versions.files | sort(attribute='mtime') | last }}"
+
+- name: Ensure ./current directory is linked correctly
+  file:
+    path: "{{ ghost_base_dir }}/{{ item['id'] }}/current"
+    src: "{{ current_version.path }}"
+    state: link
+
+- name: Ensure Casper theme is linked
   file:
     path: "{{ ghost_base_dir }}/{{ item['id'] }}/content/themes/casper"
     src: "{{ ghost_base_dir }}/{{ item['id'] }}/current/content/themes/casper"
     state: link
 
-- name: Make sure dev themes are linked
+- name: Ensure dev themes are linked
   when: item.themes_dev is defined
   file:
     path: "{{ ghost_base_dir }}/{{ item['id'] }}/content/themes/{{ theme['name'] }}"
