@@ -1,17 +1,17 @@
 ---
-- name: Set facts for 'production'
+- name: "({{ item['name'] | default(item['id']) }}) Set facts for 'production'"
   set_fact:
     install_type: "production"
     ghost_group: "ghost"
   when: item['local'] is undefined
 
-- name: Set facts for 'development'
+- name: "({{ item['name'] | default(item['id']) }}) Set facts for 'development'"
   set_fact:
     install_type: "development"
     ghost_group: "staff"
   when: item['local'] is defined
 
-- name: Check if Ghost is installed
+- name: "({{ item['name'] | default(item['id']) }}) Check if Ghost is installed"
   ansible.builtin.file:
     path: "{{ ghost_base_dir }}/{{ item['id'] }}/.ghost-cli"
     state: "file"
@@ -54,7 +54,7 @@
   include_tasks: ghost-service.yml
   when: install_type == "production"
 
-- name: Run ghost stop command
+- name: "({{ item['name'] | default(item['id']) }}) Run ghost stop command"
   become: true
   become_user: "{{ ghost_user }}"
   command:
@@ -64,7 +64,7 @@
     - ghost_installed is succeeded
     - item['state'] == "stopped" or config_updated is changed
 
-- name: Run ghost start command
+- name: "({{ item['name'] | default(item['id']) }}) Run ghost start command"
   become: true
   become_user: "{{ ghost_user }}"
   command:

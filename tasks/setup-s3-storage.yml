@@ -1,5 +1,5 @@
 ---
-- name: Ensue object storage bucket is present
+- name: "({{ item['name'] | default(item['id']) }}) Ensue object storage bucket is present"
   amazon.aws.s3_bucket:
     access_key: "{{ storage['accessKeyId'] }}"
     secret_key: "{{ storage['secretAccessKey'] }}"
@@ -7,21 +7,21 @@
     state: present
     endpoint_url: "https://{{ storage['endpoint'] }}"
 
-- name: Ensure npm storage adapter is installed
+- name: "({{ item['name'] | default(item['id']) }}) Ensure npm storage adapter is installed"
   become_user: "{{ ghost_user }}"
   npm:
     name: "{{ storage['npm_package'] }}"
     version: "{{ storage['npm_package_version'] | default('latest') }}"
     path: "{{ ghost_base_dir }}/{{ item['id'] }}"
 
-- name: Ensure storage adapters dir is present
+- name: "({{ item['name'] | default(item['id']) }}) Ensure storage adapters dir is present"
   file:
     path: "{{ ghost_base_dir }}/{{ item['id'] }}/content/adapters/storage/"
     owner: "{{ ghost_user }}"
     group: "{{ ghost_group }}"
     state: directory
 
-- name: Ensure storage adapter files are linked
+- name: "({{ item['name'] | default(item['id']) }}) Ensure storage adapter files are linked"
   file:
     src: "{{ ghost_base_dir }}/{{ item['id'] }}/node_modules/{{ storage['npm_package'] }}"
     dest: "{{ ghost_base_dir }}/{{ item['id'] }}/content/adapters/storage/{{ storage['npm_package'] }}"

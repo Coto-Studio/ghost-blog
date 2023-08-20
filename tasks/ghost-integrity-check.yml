@@ -1,5 +1,5 @@
 ---
-- name: Make sure config file is correct
+- name: "({{ item['name'] | default(item['id']) }}) Make sure config file is correct"
   copy:
     content: "{{ lookup('template', 'templates/config.j2') | to_json(indent=2, sort_keys=false) }}"
     dest: "{{ ghost_base_dir }}/{{ item['id'] }}/config.{{ install_type }}.json"
@@ -8,29 +8,29 @@
     mode: 0664
   register: config_updated
 
-- name: Find all installed versions of Ghost
+- name: "({{ item['name'] | default(item['id']) }}) Find all installed versions of Ghost"
   find:
     path: "{{ ghost_base_dir }}/{{ item['id'] }}/versions/"
     file_type: directory
   register: ghost_versions
 
-- name: Identify the most current version of Ghost
+- name: "({{ item['name'] | default(item['id']) }}) Identify the most current version of Ghost"
   set_fact:
     current_version: "{{ ghost_versions.files | sort(attribute='mtime') | last }}"
 
-- name: Ensure ./current directory is linked correctly
+- name: "({{ item['name'] | default(item['id']) }}) Ensure ./current directory is linked correctly"
   file:
     path: "{{ ghost_base_dir }}/{{ item['id'] }}/current"
     src: "{{ current_version.path }}"
     state: link
 
-- name: Ensure Casper theme is linked
+- name: "({{ item['name'] | default(item['id']) }}) Ensure Casper theme is linked"
   file:
     path: "{{ ghost_base_dir }}/{{ item['id'] }}/content/themes/casper"
     src: "{{ ghost_base_dir }}/{{ item['id'] }}/current/content/themes/casper"
     state: link
 
-- name: Ensure dev themes are linked
+- name: "({{ item['name'] | default(item['id']) }}) Ensure dev themes are linked"
   when: item.themes_dev is defined
   file:
     path: "{{ ghost_base_dir }}/{{ item['id'] }}/content/themes/{{ theme['name'] }}"
@@ -41,13 +41,13 @@
   loop_control:
     loop_var: theme
 
-- name: Ensure content dircetory has the correct permissions
+- name: "({{ item['name'] | default(item['id']) }}) Ensure content dircetory has the correct permissions"
   shell:
     cmd: "chown -R ghost:ghost ./content"
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
   when: install_type == "production"
 
-- name: Ensure all dircetories have the correct permissions
+- name: "({{ item['name'] | default(item['id']) }}) Ensure all dircetories have the correct permissions"
   shell:
     cmd: "find ./ -type d ! -perm 00775 -print -exec chmod 00775 {} \\;"
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
@@ -55,7 +55,7 @@
   register: directory_permissions
   changed_when: directory_permissions['stdout'] != ''
 
-- name: Ensure all files have the correct permissions
+- name: "({{ item['name'] | default(item['id']) }}) Ensure all files have the correct permissions"
   shell:
     cmd: "find ./ ! -path './versions/*' -type f ! -perm 664 -print -exec chmod 664 {} \\;"
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"

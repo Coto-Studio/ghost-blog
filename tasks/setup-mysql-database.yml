@@ -1,13 +1,13 @@
 ---
-- name: Sanatize ghost_install id
+- name: "({{ item['name'] | default(item['id']) }}) Sanatize ghost_install id"
   set_fact:
     sanatized_id: "{{ item['id'] | regex_replace('-|\\.','_') }}"
 
-- name: Set db_default_name
+- name: "({{ item['name'] | default(item['id']) }}) Set db_default_name"
   set_fact:
     db_default_name: "{{ sanatized_id }}_{%- if install_type == 'development' -%}dev{%- else -%}prod{%- endif -%}"
 
-- name: Ensure database is present
+- name: "({{ item['name'] | default(item['id']) }}) Ensure database is present"
   mysql_db:
     login_user: "{{ mysql['user'] | default('root') }}"
     login_password: "{{ mysql['password'] }}"

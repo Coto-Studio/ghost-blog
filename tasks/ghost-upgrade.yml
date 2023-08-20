@@ -1,5 +1,5 @@
 ---
-- name: "Check for Ghost upgrade: {{ item['id'] }}"
+- name: "({{ item['name'] | default(item['id']) }}) Check for Ghost upgrade"
   become: true
   become_user: "{{ ghost_user }}"
   command:
@@ -8,7 +8,7 @@
   register: ghost_update_status
   changed_when: '"You\u0027re up to date!" not in ghost_update_status.stdout'
 
-- name: "Upgrade Ghost install: {{ item['name'] }}"
+- name: "({{ item['name'] | default(item['id']) }}) Upgrade Ghost install"
   become: true
   become_user: "{{ ghost_user }}"
   command:

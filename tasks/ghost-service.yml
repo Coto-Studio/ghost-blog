@@ -1,22 +1,22 @@
 ---
-- name: Ensure services is present
+- name: "({{ item['name'] | default(item['id']) }}) Ensure services is present"
   template:
     src: templates/service.j2
     dest: "/lib/systemd/system/ghost_{{ item['id'] }}.service"
     mode: 0644
   register: service_updated
 
-- name: "Reload service for {{ item['name'] }}"
+- name: "({{ item['name'] | default(item['id']) }}) Reload service"
   ansible.builtin.systemd:
     daemon_reload: true
   when: service_updated is changed
 
-- name: Ensure service is persent in ghost-cli config
+- name: "({{ item['name'] | default(item['id']) }}) Ensure service is persent in ghost-cli config"
   set_fact:
     ghost_cli: "{{ ghost_cli | combine({ 'name': item['id'] }) }}"
   when: ghost_cli['name'] is not defined or ghost_cli['name'] != item['id']
 
-- name: Ensure ghost-cli config is up to date
+- name: "({{ item['name'] | default(item['id']) }}) Ensure ghost-cli config is up to date"
   copy:
     content: "{{ ghost_cli | to_json(indent=2, sort_keys=false) }}"
     dest: "{{ ghost_base_dir }}/{{ item['id'] }}/.ghost-cli"
