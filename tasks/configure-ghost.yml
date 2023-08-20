@@ -43,16 +43,16 @@
     storage: "{{ item['storage'] }}"
   when: item['storage'] is defined
 
+- name: Include Service Tasks
+  include_tasks: ghost-service.yml
+  when: install_type == "production"
+
 - name: Include Integrity Check Tasks
   include_tasks: ghost-integrity-check.yml
 
 - name: Include Upgrade Ghost Tasks
   include_tasks: ghost-upgrade.yml
   when: ghost_installed is succeeded
-
-- name: Include Service Tasks
-  include_tasks: ghost-service.yml
-  when: install_type == "production"
 
 - name: "({{ item['name'] | default(item['id']) }}) Run ghost stop command"
   become: true
