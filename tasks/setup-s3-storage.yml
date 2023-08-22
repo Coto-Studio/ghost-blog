@@ -13,18 +13,22 @@
     name: "{{ storage['npm_package'] }}"
     version: "{{ storage['npm_package_version'] | default('latest') }}"
     path: "{{ ghost_base_dir }}/{{ item['id'] }}"
+  register: storage_adapter_isntalled
 
 - name: "({{ item['name'] | default(item['id']) }}) Ensure storage adapters dir is present"
   file:
     path: "{{ ghost_base_dir }}/{{ item['id'] }}/content/adapters/storage/"
-    owner: "{{ ghost_user }}"
+    owner: "{{ ghost_group }}"
     group: "{{ ghost_group }}"
+    mode: 0775
     state: directory
+  when: storage_adapter_isntalled is changed
 
 - name: "({{ item['name'] | default(item['id']) }}) Ensure storage adapter files are linked"
-  file:
-    src: "{{ ghost_base_dir }}/{{ item['id'] }}/node_modules/{{ storage['npm_package'] }}"
+  copy:
+    remote_src: "{{ ghost_base_dir }}/{{ item['id'] }}/node_modules/{{ storage['npm_package'] }}"
     dest: "{{ ghost_base_dir }}/{{ item['id'] }}/content/adapters/storage/{{ storage['npm_package'] }}"
-    owner: "{{ ghost_user }}"
+    owner: "{{ ghost_group }}"
     group: "{{ ghost_group }}"
-    state: link
+    mode: 0775
+  when: storage_adapter_isntalled is changed

@@ -49,13 +49,14 @@
     "transport": "{{ mail['transport'] | default('Direct') }}"
   },
   {%- if storage is defined -%}
+  {%- set defualt_bucket_name = 'ghost-' + item['id'] -%}
   "storage": {
     "active": "{{ storage['npm_package'] }}",
     "{{ storage['npm_package'] }}": {
       "accessKeyId": "{{ storage['accessKeyId'] }}",
       "secretAccessKey": "{{ storage['secretAccessKey'] }}",
-      "assetHost": "https://{{ storage['bucket'] | default(item['id']) }}.{{ storage['endpoint'] }}",
-      "bucket": "{{ storage['bucket'] | default(item['id']) }}",
+      "assetHost": "{{ storage['assetHost'] | default(omit) }}",
+      "bucket": "{{ storage['bucket'] | default(defualt_bucket_name) }}",
       "endpoint": "{{ storage['endpoint'] }}"
     }
   },
