@@ -3,12 +3,14 @@
   set_fact:
     install_type: "production"
     ghost_group: "ghost"
+    reboot: false
   when: item['local'] is undefined
 
 - name: "({{ item['name'] | default(item['id']) }}) Set facts for 'development'"
   set_fact:
     install_type: "development"
     ghost_group: "staff"
+    reboot: false
   when: item['local'] is defined
 
 - name: "({{ item['name'] | default(item['id']) }}) Check if Ghost is installed"
@@ -54,6 +56,11 @@
   include_tasks: ghost-upgrade.yml
   when: ghost_installed is succeeded
 
+- name: "({{ item['name'] | default(item['id']) }}) Check if reboot is needed"
+  set_fact:
+    reboot: true
+  when: config_updated is changed or routes_updated is changed
+
 - name: "({{ item['name'] | default(item['id']) }}) Run ghost stop command"
   become: true
   become_user: "{{ ghost_user }}"
@@ -62,7 +69,7 @@
     cmd: ghost stop
   when:
     - ghost_installed is succeeded
-    - item['state'] == "stopped" or config_updated is changed
+    - item['state'] == "stopped" or reboot
 
 - name: "({{ item['name'] | default(item['id']) }}) Run ghost start command"
   become: true

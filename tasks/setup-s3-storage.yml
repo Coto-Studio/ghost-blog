@@ -24,11 +24,12 @@
     state: directory
   when: storage_adapter_isntalled is changed
 
-- name: "({{ item['name'] | default(item['id']) }}) Ensure storage adapter files are linked"
+- name: "({{ item['name'] | default(item['id']) }}) Ensure storage adapter files are copied"
   copy:
-    remote_src: "{{ ghost_base_dir }}/{{ item['id'] }}/node_modules/{{ storage['npm_package'] }}"
-    dest: "{{ ghost_base_dir }}/{{ item['id'] }}/content/adapters/storage/{{ storage['npm_package'] }}"
+    src: "{{ ghost_base_dir }}/{{ item['id'] }}/node_modules/{{ storage['npm_package'] }}"
+    dest: "{{ ghost_base_dir }}/{{ item['id'] }}/content/adapters/storage/"
     owner: "{{ ghost_group }}"
     group: "{{ ghost_group }}"
     mode: 0775
+    remote_src: true
   when: storage_adapter_isntalled is changed
