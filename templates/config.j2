@@ -50,12 +50,13 @@
   },
   {%- if storage is defined -%}
   {%- set defualt_bucket_name = 'ghost-' + item['id'] -%}
+  {%- set defualt_assetHost = "https://{{ storage['bucket'] | default(defualt_bucket_name) }}.{{ storage['endpoint'] }}" -%}
   "storage": {
     "active": "{{ storage['npm_package'] }}",
     "{{ storage['npm_package'] }}": {
       "accessKeyId": "{{ storage['accessKeyId'] }}",
       "secretAccessKey": "{{ storage['secretAccessKey'] }}",
-      "assetHost": "{{ storage['assetHost'] | default(omit) }}",
+      "assetHost": "{{ storage['assetHost'] | default(defualt_assetHost) }}",
       "bucket": "{{ storage['bucket'] | default(defualt_bucket_name) }}",
       "endpoint": "{{ storage['endpoint'] }}"
     }
