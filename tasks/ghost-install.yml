@@ -12,4 +12,4 @@
   become_user: "{{ ghost_user }}"
   command:
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
-    cmd: "ghost install {% if item['local'] is defined and item['local'] %}local{% endif %} --no-setup"
+    cmd: "ghost install --no-setup {% if item['local'] is defined and item['local'] %}local{% endif %} {% if item['version'] is defined %}{{item['version']}} --force{% endif %}"
