@@ -10,12 +10,12 @@
 
 - name: "({{ item['name'] | default(item['id']) }}) Make sure routes file is correct"
   copy:
-    src: "{{ item['routes_file'] }}"
+    src: "{{ item['routes_file'] | default(item['id'] + '/routes.yaml') }}"
     dest: "{{ ghost_base_dir }}/{{ item['id'] }}/content/settings/routes.yaml"
     owner: "{{ ghost_group }}"
     group: "{{ ghost_group }}"
     mode: 0664
-  when: item['routes_file'] is defined
+  when: item['custom_routes'] is defined
   register: routes_updated
 
 - name: "({{ item['name'] | default(item['id']) }}) Find all installed versions of Ghost"
