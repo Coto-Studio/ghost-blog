@@ -26,7 +26,7 @@
     group: "{{ ghost_group }}"
     mode: 0664
   when: lookup('file', item['id'] + '/redirects.yaml', errors='ignore') or item['redirects_file'] is defined
-  register: routes_updated
+  register: redirects_updated
 
 - name: "({{ item['name'] | default(item['id']) }}) Find all installed versions of Ghost"
   find:

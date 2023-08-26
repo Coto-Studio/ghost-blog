@@ -59,7 +59,7 @@
 - name: "({{ item['name'] | default(item['id']) }}) Check if reboot is needed"
   set_fact:
     reboot: true
-  when: config_updated is changed or routes_updated is changed
+  when: config_updated is changed or routes_updated is changed or redirects_updated is changed
 
 - name: "({{ item['name'] | default(item['id']) }}) Run ghost stop command"
   become: true
