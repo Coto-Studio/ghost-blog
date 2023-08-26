@@ -1,5 +1,5 @@
 ---
-- name: "({{ item['name'] | default(item['id']) }}) Make sure config file is correct"
+- name: "({{ item['name'] | default(item['id']) }}) Ensure config file is correct"
   copy:
     content: "{{ lookup('template', 'templates/config.j2') | to_json(indent=2, sort_keys=false) }}"
     dest: "{{ ghost_base_dir }}/{{ item['id'] }}/config.{{ install_type }}.json"
@@ -8,14 +8,24 @@
     mode: 0664
   register: config_updated
 
-- name: "({{ item['name'] | default(item['id']) }}) Make sure routes file is correct"
+- name: "({{ item['name'] | default(item['id']) }}) Ensure routes file is correct"
   copy:
     src: "{{ item['routes_file'] | default(item['id'] + '/routes.yaml') }}"
     dest: "{{ ghost_base_dir }}/{{ item['id'] }}/content/settings/routes.yaml"
     owner: "{{ ghost_group }}"
     group: "{{ ghost_group }}"
     mode: 0664
-  when: item['custom_routes'] is defined
+  when: lookup('file', item['id'] + '/routes.yaml', errors='ignore') or item['routes_file'] is defined
+  register: routes_updated
+
+- name: "({{ item['name'] | default(item['id']) }}) Ensure redirects file is correct"
+  copy:
+    src: "{{ item['redirects_file'] | default(item['id'] + '/redirects.yaml') }}"
+    dest: "{{ ghost_base_dir }}/{{ item['id'] }}/content/settings/redirects.yaml"
+    owner: "{{ ghost_group }}"
+    group: "{{ ghost_group }}"
+    mode: 0664
+  when: lookup('file', item['id'] + '/redirects.yaml', errors='ignore') or item['redirects_file'] is defined
   register: routes_updated
 
 - name: "({{ item['name'] | default(item['id']) }}) Find all installed versions of Ghost"
