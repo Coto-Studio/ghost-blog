@@ -21,7 +21,7 @@
 - name: "({{ item['name'] | default(item['id']) }}) Ensure redirects file is correct"
   copy:
     src: "{{ item['redirects_file'] | default(item['id'] + '/redirects.yaml') }}"
-    dest: "{{ ghost_base_dir }}/{{ item['id'] }}/content/settings/redirects.yaml"
+    dest: "{{ ghost_base_dir }}/{{ item['id'] }}/content/data/redirects.yaml"
     owner: "{{ ghost_group }}"
     group: "{{ ghost_group }}"
     mode: 0664
