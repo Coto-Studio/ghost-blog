@@ -49,7 +49,7 @@
     "transport": "{{ mail['transport'] | default('Direct') }}"
   },
   {%- if storage is defined -%}
-  {%- set defualt_assetHost = "https://{{ storage['bucket'] | default(defualt_bucket_name) }}.{{ storage['endpoint'] }}" -%}
+  {%- set defualt_assetHost = "https://" ~ (storage['bucket'] | default(defualt_bucket_name)) ~ "." ~ storage['endpoint'] -%}
   "storage": {
     "active": "{{ storage['npm_package'] }}",
     "{{ storage['npm_package'] }}": {
