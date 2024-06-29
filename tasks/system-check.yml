@@ -1,12 +1,15 @@
 ---
 - name: Set homebrew path for Intel Mac
-  set_fact:
-    homebrew_path: /usr/local/
+  update_fact:
+    node_path: "/usr/local/{{node_path}}"
+  when: ansible_distribution == "MacOSX"
 
 - name: Set homebrew path for M1 Mac
-  set_fact:
-    homebrew_path: /opt/homebrew/
-  when: ansible_architecture == "arm64"
+  update_fact:
+    node_path: "/opt/homebrew/{{node_path}}"
+  when:
+    - ansible_distribution == "MacOSX"
+    - ansible_architecture == "arm64"
 
 - name: Ensure ghost-cli is installed
   npm:
@@ -14,7 +17,7 @@
     name: "ghost-cli"
     state: "latest"
   environment:
-    PATH: "{{ homebrew_path }}{{ node_path }}:{{ ansible_env.PATH }}"
+    PATH: "{{ node_path }}:{{ ansible_env.PATH }}"
 
 - name: Ensure required python3 packages are installed
   pip:
