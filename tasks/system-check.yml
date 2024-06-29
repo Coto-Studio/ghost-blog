@@ -1,11 +1,11 @@
 ---
 - name: Set homebrew path for Intel Mac
-  update_fact:
+  set_fact:
     node_path: "/usr/local/{{node_path}}"
   when: ansible_distribution == "MacOSX"
 
 - name: Set homebrew path for M1 Mac
-  update_fact:
+  set_fact:
     node_path: "/opt/homebrew/{{node_path}}"
   when:
     - ansible_distribution == "MacOSX"
