@@ -2,3 +2,4 @@
 # defaults file for ghost-blog
 ghost_installs: []
 node_path: /usr/bin/
+ghost_path: /usr/bin/

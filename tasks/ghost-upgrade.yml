@@ -4,7 +4,9 @@
   become_user: "{{ ghost_user }}"
   command:
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
-    cmd: "ghost check-update"
+    cmd: "{{ node_path }}/node {{ ghost_path }}/ghost check-update"
+  environment:
+    PATH: "{{ node_path }}:{{ ansible_env.PATH }}"
   register: ghost_update_status
   changed_when: '"You\u0027re up to date!" not in ghost_update_status.stdout'
 
@@ -13,5 +15,7 @@
   become_user: "{{ ghost_user }}"
   command:
     chdir: "{{ ghost_base_dir }}/{{ item['id'] }}"
-    cmd: ghost upgrade
+    cmd: "{{ ghost_path }}/ghost upgrade"
+  environment:
+    PATH: "{{ node_path }}:{{ ansible_env.PATH }}"
   when: ghost_update_status.changed
