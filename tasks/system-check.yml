@@ -3,7 +3,9 @@
   set_fact:
     node_path: "/usr/local/{{node_path}}"
     ghost_path: /usr/local/bin
-  when: ansible_distribution == "MacOSX"
+  when:
+    - ansible_distribution == "MacOSX"
+    - ansible_architecture == "x86_64"
 
 - name: Set homebrew path for M1 Mac
   set_fact:
